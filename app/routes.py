@@ -337,7 +337,7 @@ def query():
     
     return jsonify({'total_matches': total_matches, 'topk_results': records_dict})
 
-@app.route('/test_form', methods=["GET", "POST"])
+@server_bp.route('/test_form', methods=["GET", "POST"])
 def test_form():
     form = TicketForm()
 
