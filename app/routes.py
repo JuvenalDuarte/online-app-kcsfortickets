@@ -5,7 +5,7 @@ import operator
 import copy
 import pandas as pd
 from flask import Blueprint, jsonify, request, Flask, render_template
-from .form import TicketForm
+from app.form import TicketForm
 from pycarol import Carol, Storage, Query
 from pycarol.apps import Apps
 from pycarol.filter import Filter, TYPE_FILTER, TERMS_FILTER
