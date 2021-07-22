@@ -1,0 +1,11 @@
+flask
+flask-cors
+flask-login
+flask-wtf
+gunicorn
+pycarol[dataframe]>=2.40.1
+sentencepiece==0.1.92
+sentence-transformers
+webargs
+unidecode
+ftfy

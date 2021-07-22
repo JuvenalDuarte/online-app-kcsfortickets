@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2> Abertura de Ticket</h2>
+<form action="" method="POST">
+	<p>
+		{{form.ticket_subject.label}} <br>
+		{{form.ticket_subject(size=30)}}
+	</p>
+	
+	<p>
+		{{form.ticket_module.label}} <br>
+		{{form.ticket_module(size=30)}}
+	</p>
+	<p>
+		{{form.ticket_body.label}} <br>
+		{{form.ticket_body()}}
+	</p>
+	<p>
+		{{form.submit()}}
+	</p>
+</form>
+{% endblock %}

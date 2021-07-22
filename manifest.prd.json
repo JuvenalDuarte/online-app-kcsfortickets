@@ -1,0 +1,38 @@
+{
+  "online": {
+    "processes": [
+      {
+        "name": "kcsfortickets",
+        "algorithmName": "main",
+        "namespace": "",
+        "algorithmTitle": {
+          "pt-br": "KCS For Tickets",
+          "en-US": "KCS For Tickets"
+        },
+        "algorithmDescription": {
+          "pt-br": "KCS For Tickets",
+          "en-US": "KCS For Tickets"
+        },
+        "instanceProperties": {
+          "profile": "",
+          "properties": {
+            "dockerImage": "kcsfortickets/kcsfortickets:1.0.0",
+            "preemptible": false,
+            "instanceType": "c1.medium"
+          }
+        }
+      }
+    ]
+  },
+  "docker": [
+    {
+      "dockerName": "kcsfortickets",
+      "dockerTag": "1.0.0",
+      "gitBranch": "main",
+      "gitPath": "/",
+      "instanceType": "c1.small",
+      "gitDockerfileName": "Dockerfile", 
+      "gitRepoUrl": "https://github.com/JuvenalDuarte/online-app-kcsfortickets"
+    }
+  ]
+}
