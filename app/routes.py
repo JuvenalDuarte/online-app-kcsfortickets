@@ -213,12 +213,14 @@ def load_model():
     except Exception as e:
         gpu = False
 
-    logger.debug('Loading model {name}. Using GPU: {gpu}.')
+    logger.debug(f'Loading model. Using GPU: {gpu}.')
     if model_storage_file != "":
         storage = Storage(login)
         model = storage.load(model_storage_file, format='pickle', cache=False)
-        if gpu: model.device('gpu')
-        else: model.device('cpu')
+
+        if gpu: model.to(torch.device('cuda'))
+        else: model.to(torch.device('cpu'))
+        
         name = model_storage_file
     else:
         model = SentenceTransformer(model_sentencetransformers)
