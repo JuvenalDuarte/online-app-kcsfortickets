@@ -213,6 +213,7 @@ def load_model():
     except Exception as e:
         gpu = False
 
+    logger.debug('Loading model {name}. Using GPU: {gpu}.')
     if model_storage_file != "":
         storage = Storage(login)
         model = storage.load(model_storage_file, format='pickle', cache=False)
