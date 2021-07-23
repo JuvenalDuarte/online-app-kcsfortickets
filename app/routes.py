@@ -218,6 +218,7 @@ def load_model():
         storage = Storage(login)
         model = storage.load(model_storage_file, format='pickle', cache=False)
         if gpu: model.device('gpu')
+        else: model.device('cpu')
         name = model_storage_file
     else:
         model = SentenceTransformer(model_sentencetransformers)
