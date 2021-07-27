@@ -1,4 +1,6 @@
 pandas==1.2.5
+torch
+torchvision
 flask
 flask-cors
 flask-login
