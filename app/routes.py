@@ -219,8 +219,12 @@ def load_model():
         storage = Storage(login)
         model = storage.load(model_storage_file, format='pickle', cache=False)
 
-        if gpu: model.to(torch.device('cuda'))
-        else: model.to(torch.device('cpu'))
+        if gpu: 
+            model.to(torch.device('cuda'))
+            model._target_device = torch.device('cuda')
+        else: 
+            model.to(torch.device('cpu'))
+            model._target_device = torch.device('cpu')
         
     else:
         name = model_sentencetransformers
