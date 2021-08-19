@@ -380,7 +380,8 @@ def test_form():
             logger.info(f'Unable to find results.')
             return render_template("fallback.html")
 
-        logger.info(f'Presenting results.')
+        logger.info(f'Presenting {results.shape[0]} results.')
+        logger.debug(f'Results: {results}')
         return render_template("showrelatedarticles.html", result=results)
 
     logger.info(f'Presenting test form.')
