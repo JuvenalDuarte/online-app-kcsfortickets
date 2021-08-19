@@ -355,26 +355,34 @@ def test_form():
     if form.is_submitted():
         result = request.form
 
-        data={'query': result["ticket_subject"], 
+        subject = result["ticket_subject"]
+        module = result["ticket_module"]
+        logger.info(f'Evaluating results for {subject}, on module {module}.')
+        data={'query': subject, 
             'k': '3', 
             'threshold_custom': {"tags": "80"},
             'response_columns': ['id', 'title', 'html_url', 'score'],
             'filters':[{'filter_field': "module", 
-                        "filter_value":  result["ticket_module"]}]
+                        "filter_value": module}]
         }
 
+        logger.info(f'Sending request...')
         query_url = "https://sentencesimilarity-kcsfortickets.apps.carol.ai/query"
         r = requests.post(query_url, json=data)
 
         if r.status_code != 200:
+            logger.info(f'Bad response from the server: Status {r.status_code}')
             return render_template("fallback.html")
 
         results = r.json()["topk_results"]
         if not results:
+            logger.info(f'Unable to find results.')
             return render_template("fallback.html")
 
+        logger.info(f'Presenting results.')
         return render_template("showrelatedarticles.html", result=results)
 
+    logger.info(f'Presenting test form.')
     return render_template("ticketform.html", form=form)
 
 @server_bp.errorhandler(422)
