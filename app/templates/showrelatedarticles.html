@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Encontrei estes artigos relacionados ao seu problema:</h1>
+
+<table border="1">
+    {% for a in results %}
+        {% for key, value in a.items() %}
+        <tr>
+            <th>
+                {{key}}
+            </th>
+            <td>
+                {{value}}
+            </td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+</table>
+{% endblock %}

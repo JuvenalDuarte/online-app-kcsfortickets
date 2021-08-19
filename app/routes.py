@@ -348,16 +348,32 @@ def query():
 
 @server_bp.route('/test_form', methods=["GET", "POST"])
 def test_form():
+    import requests
     form = TicketForm()
 
     #if form.validate_on_submit():
     if form.is_submitted():
         result = request.form
-        return render_template("showrelated.html", result=result)
-        #return """<h1> Evaluating results for ticket details below:<h1>
-        #        <p> Subject: {}
-        #        <p> Module: {}
-        #        <p> Description: {}""".format(result["ticket_subject"], result["ticket_module"], result["ticket_body"])
+
+        data={'query': result["ticket_subject"], 
+            'k': '3', 
+            'threshold_custom': {"tags": "80"},
+            'response_columns': ['id', 'title', 'html_url', 'score'],
+            'filters':[{'filter_field': "module", 
+                        "filter_value":  result["ticket_module"]}]
+        }
+
+        query_url = "https://sentencesimilarity-kcsfortickets.apps.carol.ai/query"
+        r = requests.post(query_url, json=data)
+
+        if r.status_code != 200:
+            return render_template("fallback.html")
+
+        results = r.json()["topk_results"]
+        if not results:
+            return render_template("fallback.html")
+
+        return render_template("showrelatedarticles.html", result=results)
 
     return render_template("ticketform.html", form=form)
 
