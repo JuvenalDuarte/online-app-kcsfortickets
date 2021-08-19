@@ -360,8 +360,8 @@ def test_form():
         logger.info(f'Evaluating results for {subject}, on module {module}.')
         data={'query': subject, 
             'k': '3', 
-            'threshold_custom': {"tags": "80"},
-            'response_columns': ['id', 'title', 'html_url', 'score'],
+            'threshold': "40",
+            'response_columns': ['id', 'title', 'html_url'],
             'filters':[{'filter_field': "module", 
                         "filter_value": module}]
         }
@@ -371,7 +371,8 @@ def test_form():
         r = requests.post(query_url, json=data)
 
         if r.status_code != 200:
-            logger.info(f'Bad response from the server: Status {r.status_code}')
+            logger.warn(f'Bad response from the server: Status {r.status_code}')
+            logger.warn(f'Server response: {r.content}')
             return render_template("fallback.html")
 
         results = r.json()["topk_results"]
