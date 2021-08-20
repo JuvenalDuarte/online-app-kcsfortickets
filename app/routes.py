@@ -351,6 +351,22 @@ def query():
     
     return jsonify({'total_matches': total_matches, 'topk_results': records_dict})
 
+def formatResultsHTML(results_in):
+    results_out = []
+
+    for a in results_in:
+        tmp = {}
+        tmp["score"] = round(float(a["score"]), 2)
+        
+        title = a["title"]
+        url = a["html_url"]
+        tmp["article"] = f"<a href=\"{url}\">{title}</a>"
+        
+        tmp["sanitized_solution"] = a["sanitized_solution"]
+        results_out.append(tmp)
+
+    return results_out
+
 @server_bp.route('/test_form', methods=["GET", "POST"])
 def test_form():
     import requests
@@ -388,7 +404,9 @@ def test_form():
         nres = len(results)
         logger.info(f'Presenting {nres} results.')
         logger.debug(f'Results: {results}')
-        return render_template("showrelatedarticles.html", result=results)
+
+        results2show = formatResultsHTML(results)
+        return render_template("showrelatedarticles.html", result=results2show)
 
     logger.info(f'Presenting test form.')
     return render_template("ticketform.html", form=form)
