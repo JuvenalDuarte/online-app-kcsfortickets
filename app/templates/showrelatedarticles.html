@@ -12,13 +12,13 @@
     {% for a in result %}
         <tr>
             <td>
-                {{ a('score') }}
+                {{ a['score'] }}
             </td>
             <td>
-                <a href="{{ a('html_url') }}">{{ a('title') }}</a>
+                <a href="{{ a['html_url'] }}">{{ a['title'] }}</a>
             </td>
             <td>
-                {{ a('sanitized_solution') }}
+                {{ a['sanitized_solution'] }}
             </td>
         </tr>
     {% endfor %}

@@ -403,7 +403,7 @@ def test_form():
 
         nres = len(results)
         logger.info(f'Presenting {nres} results.')
-        logger.debug(f'Results: {results}')
+        #logger.debug(f'Results: {results}')
 
         #results2show = formatResultsHTML(results)
         return render_template("showrelatedarticles.html", result=results)
