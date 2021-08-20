@@ -357,7 +357,7 @@ def formatResultsHTML(results_in):
     for a in results_in:
         tmp = {}
         tmp["score"] = round(float(a["score"]), 2)
-        
+
         title = a["title"]
         url = a["html_url"]
         tmp["article"] = f"<a href=\"{url}\">{title}</a>"
@@ -382,7 +382,7 @@ def test_form():
         data={'query': subject, 
             'k': '3', 
             'threshold': "40",
-            'response_columns': ['id', 'title', 'html_url'],
+            'response_columns': ['id', 'title', 'html_url', 'sanitized_solution'],
             'filters':[{'filter_field': "module", 
                         "filter_value": module}]
         }
