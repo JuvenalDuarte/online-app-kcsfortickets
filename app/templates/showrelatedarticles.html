@@ -4,13 +4,22 @@
 <h1>Encontrei estes artigos relacionados ao seu problema:</h1>
 
 <table border="1">
+    <tr>
+        <th>Similaridade</td>
+        <td>Título</td>
+        <td>Solução</td>
+    </tr>
     {% for a in result %}
         <tr>
-        {% for key, value in a.items() %}
             <td>
-                {{value}}
+                {{ a('score') }}
             </td>
-        {% endfor %}
+            <td>
+                <a href="{{ a('html_url') }}">{{ a('title') }}</a>
+            </td>
+            <td>
+                {{ a('sanitized_solution') }}
+            </td>
         </tr>
     {% endfor %}
 </table>
