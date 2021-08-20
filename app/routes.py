@@ -341,6 +341,11 @@ def query():
         logger.warn(f'Unable to find any similar article for the threshold {threshold}.')
         return jsonify({'total_matches': 0, 'topk_results': []})
 
+    if response_columns:
+        if 'score' in df_res.columns: response_columns.append('score')
+        if 'sentence_source' in df_res.columns: response_columns.append('sentence_source')
+        df_res = df_res[response_columns].copy()
+
     logger.info(f'Returning results to request.')
     records_dict = sorted(df_res.to_dict('records'), key=operator.itemgetter('score'), reverse=True)
     

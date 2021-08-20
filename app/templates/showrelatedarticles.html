@@ -5,16 +5,13 @@
 
 <table border="1">
     {% for a in result %}
-        {% for key, value in a.items() %}
         <tr>
-            <th>
-                {{key}}
-            </th>
+        {% for key, value in a.items() %}
             <td>
                 {{value}}
             </td>
-        </tr>
         {% endfor %}
+        </tr>
     {% endfor %}
 </table>
 {% endblock %}
