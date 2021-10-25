@@ -651,7 +651,6 @@ def validate_filter(val):
     if filters and any(c not in df.columns for c in filter_columns):
         raise ValidationError("One or more columns that you are trying to filter does not exist in the documents base.")
 
-
 def validate_response_columns(val):
     response_columns = list(val)
     if response_columns and any(c not in df.columns for c in response_columns):
@@ -659,9 +658,9 @@ def validate_response_columns(val):
 
 def validate_threshold_custom(val):
     logger.debug('Validating custom threshold')
-    if 'matched_on' not in df.columns:
-        raise ValidationError("The matched_on column does not exist in the documents base so it will not be possible to filter the custom threshold.")
-    sentence_source_values = list(df['matched_on'].unique()) + ["all"]
+    if 'sentence_source' not in df.columns:
+        raise ValidationError("The sentence_source column does not exist in the documents base so it will not be possible to filter the custom threshold.")
+    sentence_source_values = list(df['sentence_source'].unique()) + ["all"]
     sentence_source_filter_values = val.keys()
     if sentence_source_values and any(s not in sentence_source_values for s in sentence_source_filter_values):
-        raise ValidationError("One or more values that you are trying to filter does not exist in the matched_on column.")
+        raise ValidationError("One or more values that you are setting the threshold does not exist in the dataframe columns.")
