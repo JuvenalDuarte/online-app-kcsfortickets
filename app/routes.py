@@ -384,7 +384,7 @@ def load_model():
     except Exception as e:
         gpu = False
 
-    if model_storage_file != "":
+    if model_storage_file not in ["", None]:
         name = model_storage_file
         logger.debug(f'Loading model {name}. Using GPU: {gpu}.')
         storage = Storage(login)
@@ -461,7 +461,8 @@ def query():
 
     # Try to parse threshold as a dict on the first attempt
     query_arg = {
-        "query": fields.Str(required=True, description='Query to be searched in the documents.'),
+        "query": fields.Str(required=False, missing=None, description='Query to be searched in the documents.'),
+        "queries": fields.List(fields.Str(), required=False, missing=None, description='Queries to be searched in the documents.'),
         "k": fields.Int(required=False, missing=5, description='Number of similar documents to be return. Default: 5.'),
         "filters": fields.List(fields.Dict(keys=fields.Str(), values=fields.Raw(), required=False), required=False, missing=None, validate=validate_filter, description='List of dictionaries \
             in which the filter_field means the name of the field and the filter_value the value used for filtering the documents.'),
@@ -477,9 +478,13 @@ def query():
     threshold = args['threshold']
     threshold_custom = args.get('threshold_custom')
     query = args['query']
+    queries = args['queries']
     k = args['k']
     filters = args['filters']
     response_columns = args['response_columns']
+
+    if (query is None) and (queries is None):
+        raise ValidationError("Either \"query\" or \"queries\" parameter must be provided with the search or searches (as list) respectively.")
 
     logger.debug('Consolidating thresholds.')
     # If there's a custom threshold defined it overcomes the general threshold
@@ -536,17 +541,31 @@ def query():
         logger.warn(f'No results returned from filter.')
         return jsonify({'total_matches': 0, 'topk_results': []})
 
-    logger.info(f'Calculating similarities.')
-    df_res, total_matches = get_similar_questions(model, df_tmp, query, threshold, k, response_columns)
+    if not queries:
+        queries = [query]
 
-    if len(df_res) < 1:
-        logger.warn(f'Unable to find any similar article for the threshold {threshold}.')
-        return jsonify({'total_matches': 0, 'topk_results': []})
+    results = {}
+    for query in queries:
+        logger.info(f'Calculating similarities.')
+        df_res, total_matches = get_similar_questions(model, df_tmp, query, threshold, k, response_columns)
 
-    logger.info(f'Returning results to request.')
-    records_dict = sorted(df_res.to_dict('records'), key=operator.itemgetter('score'), reverse=True)
+        if len(df_res) < 1:
+            logger.warn(f'Unable to find any similar article for \"{query}\" using the threshold {threshold}.')
+            results[query] = {'total_matches': 0, 'topk_results': []}
+        else:
+            logger.info(f'Returning results to request.')
+            records_dict = sorted(df_res.to_dict('records'), key=operator.itemgetter('score'), reverse=True)
+            results[query] = {'total_matches': total_matches, 'topk_results': records_dict}
     
-    return jsonify({'total_matches': total_matches, 'topk_results': records_dict})
+    if len(queries) == 1:
+        # If there's a single query preserve the the legacy return format.
+        return jsonify(results[query])
+    else:
+        # If there's more than one query result will be returned as follow: {{query1} -> {'total_matches', 'topk_results'}, 
+        #                                                                    {query2} -> {'total_matches', 'topk_results'},
+        #                                                                    ...
+        #                                                                    {queryN} -> {'total_matches', 'topk_results'},
+        return jsonify(results)
 
 def formatResultsHTML(results_in):
     results_out = []
