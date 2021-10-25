@@ -1,24 +1,18 @@
 import logging
 import numpy as np
-import functools
-import operator
-import copy
 import pandas as pd
+import operator
 from flask import Blueprint, jsonify, request, Flask, render_template
 from app.form import TicketForm
-from pycarol import Carol, Storage, Query
+from pycarol import Carol, Storage
 from pycarol.apps import Apps
-from pycarol.filter import Filter, TYPE_FILTER, TERMS_FILTER
 from sentence_transformers import SentenceTransformer, util
 from webargs import fields, ValidationError
 from webargs.flaskparser import parser
-from pycarol import Carol, Storage
+from unidecode import unidecode
 import torch
 import re
 import ftfy
-from unidecode import unidecode
-import ast
-import json
 
 # Logger
 logger = logging.getLogger(__name__)
@@ -31,7 +25,6 @@ logger.addHandler(console)
 
 login = Carol()
 storage = Storage(login)
-#_settings = Apps(login).get_settings()
 
 server_bp = Blueprint('main', __name__)
 
